@@ -9,13 +9,13 @@ jobs:
   build-office:
     name: Build Office App
     runs-on: windows-latest
-    defaults:
-      run:
-        working-directory: ICL-desktop-app-office
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repo into root
         uses: actions/checkout@v3
+
+      - name: Set working directory
+        run: cd office-app
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -24,12 +24,15 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: office-app
 
       - name: Build React app
         run: npm run build
+        working-directory: office-app
 
       - name: Build Electron app
         run: npm run dist
+        working-directory: office-app
 
       - name: Upload Office App EXE
         uses: actions/upload-artifact@v4
@@ -40,12 +43,9 @@ jobs:
   build-warehouse:
     name: Build Warehouse App
     runs-on: windows-latest
-    defaults:
-      run:
-        working-directory: ICL-tablet-app-warehouse
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repo into root
         uses: actions/checkout@v3
 
       - name: Set up Node.js
@@ -55,12 +55,15 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: warehouse-app
 
       - name: Build React app
         run: npm run build
+        working-directory: warehouse-app
 
       - name: Build Electron app
         run: npm run dist
+        working-directory: warehouse-app
 
       - name: Upload Warehouse App EXE
         uses: actions/upload-artifact@v4
