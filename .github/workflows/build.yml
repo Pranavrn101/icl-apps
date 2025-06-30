@@ -15,25 +15,24 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          path: icl-apps
 
       - name: Install dependencies
         run: npm install
-        working-directory: icl-apps/ICL-desktop-app-office
+        working-directory: ICL-desktop-app-office
 
       - name: Build React app
         run: npm run build
-        working-directory: icl-apps/ICL-desktop-app-office
+        working-directory: ICL-desktop-app-office
 
       - name: Build Electron app
         run: npm run dist
-        working-directory: icl-apps/ICL-desktop-app-office
+        working-directory: ICL-desktop-app-office
 
       - name: Upload Office App EXE
         uses: actions/upload-artifact@v4
         with:
           name: office-app-build
-          path: icl-apps/ICL-desktop-app-office/dist/*.exe
+          path: ICL-desktop-app-office/dist/*.exe
 
   build-warehouse:
     name: Build Warehouse App
@@ -44,22 +43,21 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          path: icl-apps
 
       - name: Install dependencies
         run: npm install
-        working-directory: icl-apps/ICL-tablet-app-warehouse
+        working-directory: ICL-tablet-app-warehouse
 
       - name: Build React app
         run: npm run build
-        working-directory: icl-apps/ICL-tablet-app-warehouse
+        working-directory: ICL-tablet-app-warehouse
 
       - name: Build Electron app
         run: npm run dist
-        working-directory: icl-apps/ICL-tablet-app-warehouse
+        working-directory: ICL-tablet-app-warehouse
 
       - name: Upload Warehouse App EXE
         uses: actions/upload-artifact@v4
         with:
           name: warehouse-app-build
-          path: icl-apps/ICL-tablet-app-warehouse/dist/*.exe
+          path: ICL-tablet-app-warehouse/dist/*.exe
