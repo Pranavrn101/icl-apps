@@ -1,0 +1,69 @@
+name: Build Office & Warehouse Apps
+
+on:
+  push:
+    tags:
+      - 'v*'  # Only runs on version tags like v1.0.0
+
+jobs:
+  build-office:
+    name: Build Office App
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: office-app
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build React app
+        run: npm run build
+
+      - name: Build Electron app
+        run: npm run dist
+
+      - name: Upload Office App EXE
+        uses: actions/upload-artifact@v3
+        with:
+          name: office-app-build
+          path: office-app/dist/*.exe
+
+  build-warehouse:
+    name: Build Warehouse App
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: warehouse-app
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build React app
+        run: npm run build
+
+      - name: Build Electron app
+        run: npm run dist
+
+      - name: Upload Warehouse App EXE
+        uses: actions/upload-artifact@v3
+        with:
+          name: warehouse-app-build
+          path: warehouse-app/dist/*.exe
