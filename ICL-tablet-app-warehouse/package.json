@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "dist": "electron-forge make"
+    "dist": "npm run build && electron-builder"
 
   },
   "dependencies": {
