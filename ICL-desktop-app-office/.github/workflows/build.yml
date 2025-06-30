@@ -1,9 +1,9 @@
-name: Build Windows EXE
+name: Build Electron App for Windows
 
 on:
   push:
     tags:
-      - "v*"
+      - 'v*'  # Triggers when you push a tag like v1.0.0
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -21,11 +21,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build app
+      - name: Build React app
+        run: npm run build
+
+      - name: Build Electron app
         run: npm run dist
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Windows Installer
-          path: build/*.exe
+          name: windows-build
+          path: dist/*.exe
