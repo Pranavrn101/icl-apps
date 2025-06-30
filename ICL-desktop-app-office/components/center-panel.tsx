@@ -1,5 +1,5 @@
 "use client"
-
+import React from "react"
 import { Search, Filter, FileText } from "lucide-react"
 import { JobCardItem } from "@/components/job-card-item"
 import type { JobCard } from "types/job-card"
