@@ -3,7 +3,7 @@ name: Build Office & Warehouse Apps
 on:
   push:
     tags:
-      - 'v*'  # Only runs on version tags like v1.0.0
+      - 'v*'
 
 jobs:
   build-office:
@@ -32,7 +32,7 @@ jobs:
         run: npm run dist
 
       - name: Upload Office App EXE
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: office-app-build
           path: office-app/dist/*.exe
@@ -63,7 +63,7 @@ jobs:
         run: npm run dist
 
       - name: Upload Warehouse App EXE
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: warehouse-app-build
           path: warehouse-app/dist/*.exe
