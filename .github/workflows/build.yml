@@ -15,39 +15,25 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          path: .
-      
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Print Workspace Structure
-        run: |
-          echo ":: Workspace root ::"
-          dir
-          echo ":: ICL-desktop-app-office ::"
-          dir ICL-desktop-app-office || echo "Office folder missing"
-          echo ":: ICL-tablet-app-warehouse ::"
-          dir ICL-tablet-app-warehouse || echo "Warehouse folder missing"
+          path: icl-apps
 
-          
       - name: Install dependencies
         run: npm install
-        working-directory: ICL-desktop-app-office
+        working-directory: icl-apps/ICL-desktop-app-office
 
       - name: Build React app
         run: npm run build
-        working-directory: ICL-desktop-app-office
+        working-directory: icl-apps/ICL-desktop-app-office
 
       - name: Build Electron app
         run: npm run dist
-        working-directory: ICL-desktop-app-office
+        working-directory: icl-apps/ICL-desktop-app-office
 
       - name: Upload Office App EXE
         uses: actions/upload-artifact@v4
         with:
           name: office-app-build
-          path: ICL-desktop-app-office/dist/*.exe
+          path: icl-apps/ICL-desktop-app-office/dist/*.exe
 
   build-warehouse:
     name: Build Warehouse App
@@ -58,27 +44,22 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          path: .
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+          path: icl-apps
 
       - name: Install dependencies
         run: npm install
-        working-directory: ICL-tablet-app-warehouse
+        working-directory: icl-apps/ICL-tablet-app-warehouse
 
       - name: Build React app
         run: npm run build
-        working-directory: ICL-tablet-app-warehouse
+        working-directory: icl-apps/ICL-tablet-app-warehouse
 
       - name: Build Electron app
         run: npm run dist
-        working-directory: ICL-tablet-app-warehouse
+        working-directory: icl-apps/ICL-tablet-app-warehouse
 
       - name: Upload Warehouse App EXE
         uses: actions/upload-artifact@v4
         with:
           name: warehouse-app-build
-          path: ICL-tablet-app-warehouse/dist/*.exe
+          path: icl-apps/ICL-tablet-app-warehouse/dist/*.exe
