@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # <-- Important fix for Git errors
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -44,6 +46,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # <-- Important fix for Git errors
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
