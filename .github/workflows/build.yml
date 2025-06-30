@@ -16,7 +16,14 @@ jobs:
         with:
           fetch-depth: 0
           path: .
-
+      - name: Print workspace structure
+  run: |
+    echo ":: Workspace root ::"
+    dir
+    echo ":: ICL-desktop-app-office ::"
+    dir ICL-desktop-app-office || echo "Office folder missing"
+    echo ":: ICL-tablet-app-warehouse ::"
+    dir ICL-tablet-app-warehouse || echo "Warehouse folder missing"
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
