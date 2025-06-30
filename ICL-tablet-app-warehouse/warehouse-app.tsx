@@ -2,7 +2,8 @@
 
 "use client"
 import { useEffect, useState, useRef } from "react"
-import SignatureCanvas from "react-signature-canvas"
+import { SignatureSection } from "@/components/SignatureSection"
+import SignaturePad from "signature_pad"
 import { Search, Eye, Plus, Upload, Send, LayoutDashboard, Settings, HelpCircle, CheckCircle, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -77,15 +78,51 @@ export default function WarehouseApp() {
   const [imageUrls, setImageUrls] = useState<string[]>([])
   const [selectedStaff, setSelectedStaff] = useState("")
   const [signature, setSignature] = useState("")
-  const sigCanvas = useRef<SignatureCanvas | null>(null)
   const [images, setImages] = useState<File[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState("recently-added")
   const [status, setStatus] = useState<"idle" | "submitting" | "submitted">("idle");
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const sigPadRef = useRef<SignaturePad | null>(null)
 
 
+function trimCanvas(canvas: HTMLCanvasElement): HTMLCanvasElement {
+  const ctx = canvas.getContext("2d")
+  if (!ctx) return canvas
+
+  const width = canvas.width
+  const height = canvas.height
+  const imageData = ctx.getImageData(0, 0, width, height)
+
+  let top = null, bottom = null, left = null, right = null
+
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 4
+      if (imageData.data[i + 3] > 0) {
+        if (top === null) top = y
+        bottom = y
+        if (left === null || x < left) left = x
+        if (right === null || x > right) right = x
+      }
+    }
+  }
+
+  if (top === null) return canvas
+
+  const trimmedWidth = right! - left! + 1
+  const trimmedHeight = bottom! - top! + 1
+  const trimmedData = ctx.getImageData(left!, top!, trimmedWidth, trimmedHeight)
+
+  const trimmedCanvas = document.createElement("canvas")
+  trimmedCanvas.width = trimmedWidth
+  trimmedCanvas.height = trimmedHeight
+  trimmedCanvas.getContext("2d")?.putImageData(trimmedData, 0, 0)
+
+  return trimmedCanvas
+}
 
 
   type JobCard = {
@@ -101,6 +138,30 @@ export default function WarehouseApp() {
   defra: boolean
   status: "Unattended" | "Opened" | "Completed"
 }
+
+
+useEffect(() => {
+  if (canvasRef.current) {
+    const canvas = canvasRef.current;
+
+    // Set actual pixel size to match displayed size
+    const ratio = window.devicePixelRatio || 1;
+    const width = canvas.offsetWidth;
+    const height = canvas.offsetHeight;
+
+    canvas.width = width * ratio;
+    canvas.height = height * ratio;
+    canvas.getContext("2d")?.scale(ratio, ratio);
+
+    sigPadRef.current = new SignaturePad(canvas, {
+      penColor: "black",
+      backgroundColor: "white"
+    });
+  }
+}, []);
+
+
+
   useEffect(() => {
     const fetchJobCards = async () => {
       const response = await fetch("http://localhost:3001/api/job-cards")
@@ -308,7 +369,7 @@ const filteredJobCards = jobCards
         {/* Center Section - Job Cards List */}
         <div className="flex-1 p-8 max-w-[60%] bg-white overflow-y-auto">
           <div className="mb-8">
-            <h2 className="text-3xl font-bold mb-8 text-gray-900">Warehouse Job Cards</h2>
+            <h2 className="text-3xl font-bold mb-8 text-gray-900">Warehouse Job Cardssss</h2>
             <Button
             
   variant="outline"
@@ -739,31 +800,35 @@ const filteredJobCards = jobCards
   onChange={setSelectedStaff}
 />
           </div>
-          <div>
-            <Label>Signature</Label>
-            <SignatureCanvas ref={sigCanvas} penColor="black" canvasProps={{ width: 400, height: 150, className: "border bg-white" }} /> </div>
+          <div className="w-full max-w-md overflow-hidden">
+  <Label className="mb-2 block">Signature</Label>
+  <SignatureSection setSignature={setSignature} />
+
+</div>
             <div className="flex gap-4 mt-2">
   <Button
-    type="button"
-    onClick={() => {
-      if (sigCanvas.current) {
-        const dataURL = sigCanvas.current.getTrimmedCanvas().toDataURL("image/png")
-        setSignature(dataURL);
-      }
-    }}
-    className="bg-black text-white"
-  >
-    Save Signature
-  </Button>
+  type="button"
+  onClick={() => {
+    if (sigPadRef.current && !sigPadRef.current.isEmpty()) {
+      const trimmed = trimCanvas(canvasRef.current!)
+      const dataURL = trimmed.toDataURL("image/png")
+      setSignature(dataURL)
+    }
+  }}
+  className="bg-black text-white"
+>
+  Save Signature
+</Button>
 
   <Button
-    type="button"
-    variant="outline"
-    onClick={() => sigCanvas.current?.clear()}
-    className="text-black border border-gray-300"
-  >
-    Clear Signature
-  </Button>
+  type="button"
+  variant="outline"
+  onClick={() => sigPadRef.current?.clear()}
+  className="text-black border border-gray-300"
+>
+  Clear Signature
+</Button>
+
 </div>
                   </CardContent>
                 </Card>
@@ -815,7 +880,7 @@ const filteredJobCards = jobCards
             setDamages("");
             setSelectedStaff("");
             setSignature("");
-            sigCanvas.current?.clear();
+            sigPadRef.current?.clear();
             setSelectedJobCard(null);
             setStatus("idle");
             setIsSubmitted(false); // ✅ Reset send button after use

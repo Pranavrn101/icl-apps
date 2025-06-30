@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "next lint",
     "dist": "npm run build && electron-builder"
-
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -54,9 +53,9 @@
     "react-dom": "^18.0.0",
     "react-hook-form": "^7.54.1",
     "react-resizable-panels": "^2.1.7",
-    "react-signature-canvas": "^1.1.0-alpha.2",
     "react-signature-pad-wrapper": "^4.1.0",
     "recharts": "2.15.0",
+    "signature_pad": "^5.0.10",
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
