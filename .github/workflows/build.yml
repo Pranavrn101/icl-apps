@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
     defaults:
       run:
-        working-directory: office-app
+        working-directory: ICL-desktop-app-office
 
     steps:
       - name: Checkout repo
@@ -42,7 +42,7 @@ jobs:
     runs-on: windows-latest
     defaults:
       run:
-        working-directory: warehouse-app
+        working-directory: ICL-tablet-app-warehouse
 
     steps:
       - name: Checkout repo
