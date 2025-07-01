@@ -1,14 +1,34 @@
 {
-  "name": "my-v0-project",
+  "name": "icl-app-warehouse",
   "version": "0.1.0",
   "private": true,
+  "main": "electron.js",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export", 
+    "postinstall": "electron-builder install-app-deps",
+    "electron": "electron .",
+    "pack": "electron-builder --dir",
     "start": "next start",
     "lint": "next lint",
     "dist": "npm run build && electron-builder"
   },
+      "build": {
+    "appId": "com.icl.warehouse",
+    "productName": "ICL Warehouse App",
+    "files": [
+      "out",
+      "electron.js"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": "nsis"
+    }
+  },
+
+
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "1.2.2",
