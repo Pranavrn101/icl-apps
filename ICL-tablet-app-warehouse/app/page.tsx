@@ -1,7 +1,11 @@
 "use client"
 
 import WarehouseApp from "../warehouse-app"
+import { ProtectedRoute } from "@/components/ProtectedRoute"
+
 
 export default function Page() {
-  return <WarehouseApp />
+  return (<ProtectedRoute>
+      <WarehouseApp />
+    </ProtectedRoute>)
 }

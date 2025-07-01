@@ -2,15 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext"; // 👈 Import Auth hook
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 
-export default function LoginPage() {
+export default function WarehouseLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const { login } = useAuth(); // 👈 Use login function from context
 
   const handleLogin = async () => {
     try {
@@ -23,41 +25,15 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok) {
-        console.log(`Login successful for user: ${username}`);
-        localStorage.setItem("token", data.token);
-        router.push("/");
+        console.log("Login successful:", username);
+        login(data.token); // 👈 Use login from context (handles token + redirect)
+        router.push("/"); // optional: override redirect if needed
       } else {
-        // Log and show specific messages based on backend response
-        if (data.message === "User does not exist") {
-          console.warn(`Login failed: User does not exist: ${username}`);
-          toast({
-            title: "Login Failed",
-            description: "User does not exist.",
-            variant: "destructive",
-          });
-        } else if (data.message === "Invalid credentials") {
-          console.warn(`Login failed: Wrong credentials for user: ${username}`);
-          toast({
-            title: "Login Failed",
-            description: "Incorrect username or password.",
-            variant: "destructive",
-          });
-        } else {
-          console.warn(`Login failed: ${data.message || "Unknown error"}`);
-          toast({
-            title: "Login Failed",
-            description: data.message || "Unknown error occurred.",
-            variant: "destructive",
-          });
-        }
+        alert(data.message || "Login failed");
       }
     } catch (error) {
-      console.error("Login request error:", error);
-      toast({
-        title: "Login Failed",
-        description: "Network or server error. Please try again later.",
-        variant: "destructive",
-      });
+      console.error("Login error:", error);
+      alert("Network error");
     }
   };
 
@@ -65,7 +41,7 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
       <Card className="w-[360px] shadow-md border border-gray-200">
         <CardHeader>
-          <CardTitle className="text-center text-lg">Office Login</CardTitle>
+          <CardTitle className="text-center text-lg">Warehouse Login</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <Input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
@@ -81,6 +57,11 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </div>
+    // <div>
+    //   <h2>Warehouse Login</h2>
+    //   <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+    //   <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+    //   <button onClick={handleLogin}>Login</button>
+    // </div>
   );
 }
-

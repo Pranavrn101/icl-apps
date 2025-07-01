@@ -174,17 +174,17 @@ useEffect(() => {
 
 
   //status update
-  useEffect(() => {
-  if (selectedJobCard) {
-    fetch(`http://localhost:3001/api/job-cards/${selectedJobCard.mawb_number}/status`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ status: "Attended" }),
-    }).catch(err => console.error("Failed to update status:", err));
-  }
-}, [selectedJobCard])
+//   useEffect(() => {
+//   if (selectedJobCard) {
+//     fetch(`http://localhost:3001/api/job-cards/${selectedJobCard.mawb_number}/status`, {
+//       method: "PATCH",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ status: "Attended" }),
+//     }).catch(err => console.error("Failed to update status:", err));
+//   }
+// }, [selectedJobCard])
 
 
   const addItem = () => {
@@ -764,6 +764,7 @@ const filteredJobCards = jobCards
                         placeholder="Describe any damages..."
                         className="min-h-28 text-lg mt-2 rounded-xl border-gray-200 shadow-sm focus:shadow-md transition-shadow"
                         value={damages} onChange={(e) => setDamages(e.target.value)}
+                        required
                       />
                     </div>
                   </CardContent>
@@ -794,18 +795,17 @@ const filteredJobCards = jobCards
                   <CardContent className="space-y-6">
                     
                     <div>
-            <Label>Warehouse Staff</Label>
             <WarehouseStaffDropdown
   selected={selectedStaff}
   onChange={setSelectedStaff}
 />
           </div>
           <div className="w-full max-w-md overflow-hidden">
-  <Label className="mb-2 block">Signature</Label>
+  {/* <Label className="mb-2 block">Signature</Label> */}
   <SignatureSection setSignature={setSignature} />
 
 </div>
-            <div className="flex gap-4 mt-2">
+            {/* <div className="flex gap-4 mt-2">
   <Button
   type="button"
   onClick={() => {
@@ -829,7 +829,7 @@ const filteredJobCards = jobCards
   Clear Signature
 </Button>
 
-</div>
+</div> */}
                   </CardContent>
                 </Card>
 
